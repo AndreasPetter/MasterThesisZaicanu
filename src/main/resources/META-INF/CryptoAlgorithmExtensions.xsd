@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://ext.securityframework.research.seeburger.com"
+    xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sf="http://ext.securityframework.research.seeburger.com" elementFormDefault="qualified">
+
+    <simpleType name="extensionCryptoAlgorithmNameEnum">
+        <restriction base="string">
+            <enumeration value="Paillier"/>
+        </restriction>
+    </simpleType>
+</schema>

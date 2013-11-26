@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://securityframework.research.seeburger.com"
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sf="http://securityframework.research.seeburger.com"
+	elementFormDefault="qualified"
+	xmlns:ext="http://ext.securityframework.research.seeburger.com">
+
+	<import namespace="http://ext.securityframework.research.seeburger.com"
+		schemaLocation="META-INF/CryptoAlgorithmExtensions.xsd" />
+
+	<element name="Config">
+		<complexType>
+			<sequence>
+				<element name="GeneratorKeys">
+					<complexType>
+						<attribute name="location" type="anyURI" use="required" />
+					</complexType>
+				</element>
+				<!-- Defined only when framework user is not key owner -->
+				<element name="keySharingEndpoint" type="sf:wsEndpoint"
+					minOccurs="0" />
+				<element name="Providers" minOccurs="0">
+					<complexType>
+						<sequence>
+							<element name="Provider" type="sf:providerType"
+								minOccurs="1" maxOccurs="unbounded" />
+						</sequence>
+					</complexType>
+					<key name="providerID">
+						<selector xpath=".//Provider" />
+						<field xpath="@providerID" />
+					</key>
+					<keyref name="providerRef" refer="sf:providerID">
+						<selector xpath=".//encryptedAssets" />
+						<field xpath="@provider" />
+					</keyref>
+				</element>
+				<element name="EncryptedAssets">
+					<complexType>
+						<sequence>
+							<element name="keyspace" type="sf:keyspaceAsset"
+								maxOccurs="unbounded" />
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<complexType name="providerType">
+		<attribute name="providerID" type="string" use="required" />
+		<attribute name="class" type="string" use="required" />
+		<attribute name="preference" type="positiveInteger" use="optional" />
+	</complexType>
+
+	<complexType name="encryptedAsset" abstract="true">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="authenticatedEncryption"
+			type="sf:authenticatedEncryptionAlgorithmNameEnum" use="optional" />
+		<attribute name="encryptionAlgorithm" type="sf:encryptionAlgorithmNameEnum"
+			use="optional" />
+		<attribute name="integrityAlgorithm" type="sf:integrityAlgorithmNameEnum"
+			use="optional" />
+		<attribute name="provider" type="string" use="optional" />
+	</complexType>
+
+	<simpleType name="granularityType">
+		<restriction base="string">
+			<enumeration value="self" />
+			<enumeration value="row" /><!-- sharing on row by row basis -->
+			<enumeration value="column" /><!-- sharing on column by column 
+				basis -->
+			<enumeration value="cell" /><!-- sharing on cell by cell basis 
+				(not recommended !) -->
+		</restriction>
+	</simpleType>
+
+	<simpleType name="supportedAuthenticatedEncryptionAlgorithmNameEnum">
+		<restriction base="string">
+			<enumeration value="AES/GCM/NoPadding" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="encryptionAlgorithmNameEnum">
+		<restriction base="string" />
+	</simpleType>
+
+	<simpleType name="integrityAlgorithmNameEnum">
+		<restriction base="string" />
+	</simpleType>
+
+	<simpleType name="authenticatedEncryptionAlgorithmNameEnum">
+		<union
+			memberTypes="sf:supportedAuthenticatedEncryptionAlgorithmNameEnum ext:extensionCryptoAlgorithmNameEnum" />
+	</simpleType>
+
+	<complexType name="keyspaceAsset">
+		<complexContent>
+			<extension base="sf:encryptedAsset">
+				<sequence>
+					<element name="columnFamily" type="sf:columnFamilyAsset"
+						minOccurs="0" maxOccurs="unbounded" />
+				</sequence>
+				<attribute name="owner" type="boolean" default="true" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="wsEndpoint">
+		<sequence>
+			<!-- Auth token is only needed by the requestor of keys -->
+			<element name="authToken" type="string" minOccurs="0" />
+			<element name="address" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="columnFamilyAsset">
+		<complexContent>
+			<extension base="sf:encryptedAsset">
+				<sequence>
+					<element name="columnExceptionSet" type="sf:columnExceptionSetType"
+						minOccurs="0" />
+				</sequence>
+				<attribute name="defaultEncryptionPolicy" type="sf:allOrNothingType"
+					default="ALL" />
+				<attribute name="sharingGranularity" type="sf:granularityType"
+					default="self" />
+				<attribute name="cacheSize" type="int" default="0" />
+				<attribute name="owner" type="boolean" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="columnExceptionSetType">
+		<sequence maxOccurs="unbounded">
+			<choice>
+				<element name="specificColumnSetException" type="sf:columnSetExceptionType" />
+				<element name="prefixedColumnSetException" type="sf:columnSetExceptionType" />
+				<element name="regexFilteredColumnSetException" type="sf:columnSetExceptionType" />
+			</choice>
+		</sequence>
+	</complexType>
+
+	<complexType name="columnSetExceptionType">
+		<attribute name="filter" type="string" />
+	</complexType>
+
+
+	<!-- <complexType name="specificColumnExceptionType"> <complexContent> <extension 
+		base="sf:columnSetExceptionType"> <attribute name="name" type="string" /> 
+		</extension> </complexContent> </complexType> <complexType name="prefixedColumnSetExceptionType"> 
+		<complexContent> <extension base="sf:columnSetExceptionType"> <attribute 
+		name="prefix" type="string" /> </extension> </complexContent> </complexType> 
+		<complexType name="regexFilteredColumnSetExceptionType"> <complexContent> 
+		<extension base="sf:columnSetExceptionType"> <attribute name="pattern" type="string" 
+		/> </extension> </complexContent> </complexType> -->
+
+	<simpleType name="allOrNothingType">
+		<restriction base="string">
+			<enumeration value="ALL" />
+			<enumeration value="NONE" />
+		</restriction>
+	</simpleType>
+
+</schema>

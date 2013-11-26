@@ -1,0 +1,12 @@
+<aspectj>
+	<aspects>
+		<aspect
+			name="com.seeburger.research.securityframework.interceptor.SecurityAspectDataDefinition" />
+	</aspects>
+	<!-- <weaver options="-verbose"/> -->
+	<weaver options="-Xlint:ignore -Xset:weaveJavaxPackages=true"/>
+		<!-- <include within="me.prettyprint.hector.*"/> -->
+		<!-- <include within="org.apache.cassandra.thrift.*"/> -->
+		<!-- <include within="com.seeburger.research.*"/> -->
+	<!-- </weaver> -->
+</aspectj>

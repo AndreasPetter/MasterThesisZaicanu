@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://securityframework.research.seeburger.com"
+	xsi:schemaLocation="http://securityframework.research.seeburger.com CryptoProviderConf.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<GeneratorKeys location="/META-INF/smkKeystore" />
+	
+	<keySharingEndpoint>
+		<authToken>dso</authToken>
+		<address>http://192.168.80.1:9010/policyEnginePort</address>
+	</keySharingEndpoint>
+
+	<Providers>
+		<Provider providerID="BC"
+			class="org.bouncycastle.jce.provider.BouncyCastleProvider"
+			preference="2" />
+	</Providers>
+
+	<EncryptedAssets>
+		<!-- If provider is specified -> use the algorithm provided by this specific 
+			provider -->
+		<keyspace name="dso_schema" authenticatedEncryption="AES/GCM/NoPadding"
+			provider="BC" owner="true">
+			<!-- inner elements inherit all attributes from parents but can override 
+				them -->
+			<columnFamily name="Producer" sharingGranularity="row"
+				defaultEncryptionPolicy="ALL">
+				<columnExceptionSet>
+					<specificColumnSetException filter="address_city" />
+					<prefixedColumnSetException filter="Network_Segment_ID" />
+				</columnExceptionSet>
+			</columnFamily>
+			<columnFamily name="Consumer" sharingGranularity="row"><!-- defaultEncryptionPolicy='ALL' 
+					by default -->
+				<columnExceptionSet>
+					<specificColumnSetException filter="address_city" />
+					<prefixedColumnSetException filter="Network_Segment_ID" />
+				</columnExceptionSet>
+			</columnFamily>
+			<columnFamily name="MeterReading" sharingGranularity="row"
+				owner="false" />
+			<columnFamily name="GeneratorReading"
+				sharingGranularity="row" cacheSize="1024" />
+		</keyspace>
+	</EncryptedAssets>
+
+</Config>

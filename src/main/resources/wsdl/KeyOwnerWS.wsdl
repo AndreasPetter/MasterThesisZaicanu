@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="IKeySharingOwnerServiceService" targetNamespace="http://owner.sharing.keymanagement.layers.securityframework.research.seeburger.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://owner.sharing.keymanagement.layers.securityframework.research.seeburger.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://owner.sharing.keymanagement.layers.securityframework.research.seeburger.com/" elementFormDefault="unqualified" targetNamespace="http://owner.sharing.keymanagement.layers.securityframework.research.seeburger.com/" version="1.0">
+<xs:element name="shareKeys" type="tns:shareKeys"/>
+<xs:element name="shareKeysResponse" type="tns:shareKeysResponse"/>
+<xs:complexType name="shareKeys">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="encryptedRequestId" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="resourceCoordinates" type="tns:resourceCoordinates"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="resourceCoordinates">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cfName" type="xs:string"/>
+      <xs:element minOccurs="0" name="columnName" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="columnNameSerializerClass" type="xs:string"/>
+      <xs:element minOccurs="0" name="keyspace" type="xs:string"/>
+      <xs:element minOccurs="0" name="requestorEndpoint" type="xs:string"/>
+      <xs:element minOccurs="0" name="rowid" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="rowidSerializerClass" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="shareKeysResponse">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="shareKeysResponse">
+    <wsdl:part name="parameters" element="tns:shareKeysResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="shareKeys">
+    <wsdl:part name="parameters" element="tns:shareKeys">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IKeySharingOwnerService">
+    <wsdl:operation name="shareKeys">
+      <wsdl:input name="shareKeys" message="tns:shareKeys">
+    </wsdl:input>
+      <wsdl:output name="shareKeysResponse" message="tns:shareKeysResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="IKeySharingOwnerServiceServiceSoapBinding" type="tns:IKeySharingOwnerService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="shareKeys">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="shareKeys">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="shareKeysResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="IKeySharingOwnerServiceService">
+    <wsdl:port name="IKeySharingOwnerServicePort" binding="tns:IKeySharingOwnerServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/IKeySharingOwnerServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

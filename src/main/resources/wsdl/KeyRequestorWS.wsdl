@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="IKeyRequestorService" targetNamespace="http://requestor.sharing.keymanagement.layers.securityframework.research.seeburger.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://requestor.sharing.keymanagement.layers.securityframework.research.seeburger.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://requestor.sharing.keymanagement.layers.securityframework.research.seeburger.com/" elementFormDefault="unqualified" targetNamespace="http://requestor.sharing.keymanagement.layers.securityframework.research.seeburger.com/" version="1.0">
+<xs:element name="storeKeyPackage" type="tns:storeKeyPackage"/>
+<xs:element name="storeKeyPackageResponse" type="tns:storeKeyPackageResponse"/>
+<xs:complexType name="storeKeyPackage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:keySharingPackage"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="keySharingPackage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="correlationId" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="columnFamilyName" type="xs:string"/>
+      <xs:element minOccurs="0" name="keyspaceName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="storeKeyPackageResponse">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="storeKeyPackageResponse">
+    <wsdl:part name="parameters" element="tns:storeKeyPackageResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="storeKeyPackage">
+    <wsdl:part name="parameters" element="tns:storeKeyPackage">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IKeyRequestor">
+    <wsdl:operation name="storeKeyPackage">
+      <wsdl:input name="storeKeyPackage" message="tns:storeKeyPackage">
+    </wsdl:input>
+      <wsdl:output name="storeKeyPackageResponse" message="tns:storeKeyPackageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="IKeyRequestorServiceSoapBinding" type="tns:IKeyRequestor">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="storeKeyPackage">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="storeKeyPackage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="storeKeyPackageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="IKeyRequestorService">
+    <wsdl:port name="IKeyRequestorPort" binding="tns:IKeyRequestorServiceSoapBinding">
+      <soap:address location="http://localhost:9090/IKeyRequestorPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
